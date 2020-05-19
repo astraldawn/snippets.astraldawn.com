@@ -2,16 +2,16 @@
 
 ## Commands
 
-```text
+```bash
 docker-compose run --rm <service> <command> <args>
 ```
 
 ## Dockerfiles
 
-Creating non-root user with same uid / gid as local user
+Creating non-root user with same uid / gid as local user \(as part of a larger project using docker-compose\)
 
 {% code title="wrap.sh" %}
-```text
+```bash
 #!/bin/bash
 
 export host_uid=$(id -u)
@@ -33,4 +33,19 @@ RUN groupadd --gid ${host_gid} user && \
 USER user
 ```
 {% endcode %}
+
+{% code title="docker-compose.yml" %}
+```yaml
+build:
+  context: ./
+  dockerfile: ./Dockerfile
+  args:
+    - 'host_uid=$host_uid'
+    - 'host_gid=$host_gid'
+```
+{% endcode %}
+
+```bash
+./wrap.sh docker-compose ...
+```
 
